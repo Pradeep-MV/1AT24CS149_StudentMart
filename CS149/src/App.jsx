@@ -1,23 +1,22 @@
-import './App.css'
+import Register from "./Components/Register";
+import Login from "./Components/Login";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="studentmart">
-      <h1>StudentMart</h1>
 
-      <h2>Welcome to StudentMart</h2>
+    return (
 
-      <p>Your Online Shopping Application</p>
+        <div>
+            <h1>StudentMart</h1>
 
-      <p>
-        <strong>Name:</strong> Pradeep M V
-      </p>
+            <Register />
 
-      <p>
-        <strong>USN:</strong> 1AT24CS149
-      </p>
-    </div>
-  )
+            <hr />
+            <hr/>
+
+            <Login />
+        </div>
+
+    );
 }
-
-export default App
+export default App;

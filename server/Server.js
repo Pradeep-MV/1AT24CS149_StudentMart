@@ -9,20 +9,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Register authentication routes
+const authRoutes = require("./Router/authRouter");
+
+
+
+// Home API
 app.get("/", (req, res) => {
     res.json({
         message: "StudentMart API is running"
     });
 });
 
+
+app.use("/api/auth", authRoutes);
+
+// MongoDB connection
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB connected");
 
-        app.listen(process.env.PORT, () => {
+        const PORT = process.env.PORT || 5002;
+
+        app.listen(PORT, () => {
             console.log(
-                `Server running on http://localhost:${process.env.PORT}`
+                `Server running on http://localhost:${PORT}`
             );
         });
     })
@@ -31,4 +43,4 @@ mongoose
             "MongoDB connection failed:",
             error.message
         );
-    });
+    })
