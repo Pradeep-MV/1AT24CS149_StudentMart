@@ -2,7 +2,9 @@ import { useState } from "react";
 
 function Profile({ goToDashboard }) {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(
+        localStorage.getItem("user") || "null"
+    );
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -11,16 +13,14 @@ function Profile({ goToDashboard }) {
 
     const [message, setMessage] = useState("");
 
-
     // Save updated profile
     const handleUpdate = (e) => {
-
         e.preventDefault();
 
         const updatedUser = {
             ...user,
-            name: name,
-            email: email
+            name: name.trim(),
+            email: email.trim().toLowerCase()
         };
 
         localStorage.setItem(
@@ -29,28 +29,20 @@ function Profile({ goToDashboard }) {
         );
 
         setMessage("Profile updated successfully!");
-
         setIsEditing(false);
     };
 
-
-    // EDIT PROFILE PAGE
+    // EDIT PROFILE
     if (isEditing) {
-
         return (
-
             <div className="profile-container">
-
                 <div className="profile-card">
 
                     <h1>Edit Profile</h1>
 
                     <form onSubmit={handleUpdate}>
-
                         <div>
-
                             <label>Name</label>
-
                             <input
                                 type="text"
                                 value={name}
@@ -58,15 +50,12 @@ function Profile({ goToDashboard }) {
                                     setName(e.target.value)
                                 }
                                 placeholder="Enter your name"
+                                required
                             />
-
                         </div>
 
-
                         <div>
-
                             <label>Email</label>
-
                             <input
                                 type="email"
                                 value={email}
@@ -74,57 +63,59 @@ function Profile({ goToDashboard }) {
                                     setEmail(e.target.value)
                                 }
                                 placeholder="Enter your email"
+                                required
                             />
-
                         </div>
-
 
                         <button type="submit">
                             Save Changes
                         </button>
-
                     </form>
 
-
                     <button
+                        type="button"
                         className="secondary-button"
-                        onClick={() => setIsEditing(false)}
+                        onClick={() => {
+                            setIsEditing(false);
+                            setName(user?.name || "");
+                            setEmail(user?.email || "");
+                            setMessage("");
+                        }}
                     >
                         Cancel
                     </button>
 
+                    <button
+                        type="button"
+                        className="secondary-button"
+                        onClick={goToDashboard}
+                    >
+                        Back to Dashboard
+                    </button>
+
                 </div>
-
             </div>
-
         );
     }
 
-
     // PROFILE PAGE
     return (
-
         <div className="profile-container">
-
             <div className="profile-card">
 
                 <h1>My Profile</h1>
 
-
                 <div className="profile-info">
-
                     <p>
-                        <strong>Name:</strong>{" "}
-                        {name}
+                        <strong>Name:</strong>
+                        <span>{name || "Not provided"}</span>
                     </p>
 
                     <p>
-                        <strong>Email:</strong>{" "}
-                        {email}
+                        <strong>Email:</strong>
+                        <span>{email || "Not provided"}</span>
                     </p>
-
                 </div>
-
 
                 {message && (
                     <p className="success-message">
@@ -132,25 +123,30 @@ function Profile({ goToDashboard }) {
                     </p>
                 )}
 
-
                 <button
-                    onClick={() => setIsEditing(true)}
+                    type="button"
+                    onClick={() => {
+                        setMessage("");
+                        setIsEditing(true);
+                    }}
                 >
                     Edit Profile
                 </button>
 
-
                 <button
+                    type="button"
                     className="secondary-button"
-                    onClick={goToDashboard}
+                    onClick={() => {
+                        if (typeof goToDashboard === "function") {
+                            goToDashboard();
+                        }
+                    }}
                 >
                     Back to Dashboard
                 </button>
 
             </div>
-
         </div>
-
     );
 }
 
