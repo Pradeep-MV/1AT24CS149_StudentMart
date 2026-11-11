@@ -1,0 +1,180 @@
+
+/* Main Product Form Page */
+.product-form-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #f4f7fb;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+/* Product Form Card */
+.product-form-card {
+    width: 100%;
+    max-width: 650px;
+    padding: 35px 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+/* Form Heading */
+.product-form-card h2 {
+    margin: 0 0 10px;
+    color: #1e293b;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.product-form-card > p {
+    margin: 0 0 28px;
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* Labels */
+.product-form-card label {
+    display: block;
+    margin: 18px 0 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Input Fields */
+.product-form-card input,
+.product-form-card textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.product-form-card input {
+    height: 46px;
+}
+
+.product-form-card textarea {
+    min-height: 115px;
+    resize: vertical;
+}
+
+/* Input Focus */
+.product-form-card input:focus,
+.product-form-card textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Placeholder */
+.product-form-card input::placeholder,
+.product-form-card textarea::placeholder {
+    color: #94a3b8;
+}
+
+/* Price and Stock Row */
+.product-form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.product-form-row > div {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Validation Message */
+.product-form-message {
+    margin: 18px 0 0 !important;
+    padding: 12px 15px;
+    background: #fee2e2;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+/* Action Buttons */
+.product-form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 28px;
+}
+
+.product-form-actions button {
+    flex: 1;
+    min-height: 46px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* Add Product Button */
+.product-form-actions button[type="submit"] {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.product-form-actions button[type="submit"]:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.product-form-actions button[type="submit"]:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
+/* Cancel Button */
+.product-form-actions button[type="button"] {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.product-form-actions button[type="button"]:hover {
+    background: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .product-form-page {
+        padding: 25px 14px;
+    }
+
+    .product-form-card {
+        padding: 25px 20px;
+    }
+
+    .product-form-card h2 {
+        font-size: 24px;
+    }
+
+    .product-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .product-form-actions {
+        flex-direction: column;
+    }
+
+    .product-form-actions button {
+        width: 100%;
+    }
+}
