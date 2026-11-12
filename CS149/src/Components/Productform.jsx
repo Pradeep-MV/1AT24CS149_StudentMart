@@ -3,15 +3,17 @@ import "./Styles/ProductForm.css";
 
 const API = "http://localhost:5002/api/products";
 
-function ProductForm({ onProductAdded, onCancel }) {
-    const [form, setForm] = useState({
-        name: "",
-        description: "",
-        price: "",
-        category: "",
-        image: "",
-        stock: "0"
-    });
+function ProductForm({ onProductAdded, onProductUpdated, onCancel, editProduct }) {
+    const isEditMode = Boolean(editProduct && editProduct._id);
+
+    const [form, setForm] = useState(() => ({
+        name: editProduct?.name || "",
+        description: editProduct?.description || "",
+        price: String(editProduct?.price || ""),
+        category: editProduct?.category || "",
+        image: editProduct?.image || "",
+        stock: String(editProduct?.stock ?? 0)
+    }));
 
     const [message, setMessage] = useState("");
     const [saving, setSaving] = useState(false);
@@ -27,8 +29,7 @@ function ProductForm({ onProductAdded, onCancel }) {
         e.preventDefault();
         setMessage("");
 
-        if (!form.name.trim() || !form.description.trim() ||
-            !form.category.trim()) {
+        if (!form.name.trim() || !form.description.trim() || !form.category.trim()) {
             setMessage("Please complete all required fields.");
             return;
         }
@@ -46,8 +47,11 @@ function ProductForm({ onProductAdded, onCancel }) {
         setSaving(true);
 
         try {
-            const response = await fetch(API, {
-                method: "POST",
+            const url = isEditMode ? `${API}/${editProduct._id}` : API;
+            const method = isEditMode ? "PUT" : "POST";
+
+            const response = await fetch(url, {
+                method,
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -61,19 +65,22 @@ function ProductForm({ onProductAdded, onCancel }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Unable to add product");
+                throw new Error(data.message || `Unable to ${isEditMode ? "update" : "add"} product`);
             }
 
-            setForm({
-                name: "",
-                description: "",
-                price: "",
-                category: "",
-                image: "",
-                stock: "0"
-            });
-
-            onProductAdded(data.product);
+            if (isEditMode) {
+                if (onProductUpdated) onProductUpdated(data.product);
+            } else {
+                setForm({
+                    name: "",
+                    description: "",
+                    price: "",
+                    category: "",
+                    image: "",
+                    stock: "0"
+                });
+                if (onProductAdded) onProductAdded(data.product);
+            }
         } catch (error) {
             setMessage(error.message || "Unable to connect to server");
         } finally {
@@ -84,8 +91,12 @@ function ProductForm({ onProductAdded, onCancel }) {
     return (
         <section className="product-form-page">
             <form className="product-form-card" onSubmit={handleSubmit}>
-                <h2>Add New Product</h2>
-                <p>Enter the product details below.</p>
+                <h2>{isEditMode ? "Edit Product" : "Add New Product"}</h2>
+                <p>
+                    {isEditMode
+                        ? "Update the product details and inventory below."
+                        : "Enter the product details below to add it to the catalog."}
+                </p>
 
                 <label htmlFor="product-name">Product Name *</label>
                 <input
@@ -139,15 +150,23 @@ function ProductForm({ onProductAdded, onCancel }) {
                 </div>
 
                 <label htmlFor="product-category">Category *</label>
-                <input
+                <select
                     id="product-category"
                     name="category"
                     value={form.category}
                     onChange={handleChange}
                     required
-                    maxLength={60}
-                    placeholder="e.g. Stationery"
-                />
+                >
+                    <option value="">-- Select a Category --</option>
+                    <option value="Stationery">Stationery</option>
+                    <option value="Books & Textbooks">Books & Textbooks</option>
+                    <option value="Electronics & Gadgets">Electronics & Gadgets</option>
+                    <option value="Hostel & Room Essentials">Hostel & Room Essentials</option>
+                    <option value="Lab & Study Materials">Lab & Study Materials</option>
+                    <option value="Sports & Fitness">Sports & Fitness</option>
+                    <option value="Clothing & Accessories">Clothing & Accessories</option>
+                    <option value="Other">Other</option>
+                </select>
 
                 <label htmlFor="product-image">Image URL (optional)</label>
                 <input
@@ -163,7 +182,9 @@ function ProductForm({ onProductAdded, onCancel }) {
 
                 <div className="product-form-actions">
                     <button type="submit" disabled={saving}>
-                        {saving ? "Saving..." : "Add Product"}
+                        {saving
+                            ? isEditMode ? "Saving Changes..." : "Adding Product..."
+                            : isEditMode ? "Save Changes" : "Add Product"}
                     </button>
 
                     <button type="button" onClick={onCancel}>
