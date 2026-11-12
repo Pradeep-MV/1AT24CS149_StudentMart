@@ -9,10 +9,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Register authentication routes
+// Register routes
 const authRoutes = require("./Router/authRouter");
-
-
+const productRoutes = require("./Router/Productroutes");
+const cartRoutes = require("./Router/CartRouter");
 
 // Home API
 app.get("/", (req, res) => {
@@ -21,8 +21,9 @@ app.get("/", (req, res) => {
     });
 });
 
-
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
 
 // MongoDB connection
 mongoose
@@ -43,4 +44,4 @@ mongoose
             "MongoDB connection failed:",
             error.message
         );
-    })
+    });

@@ -1,7 +1,5 @@
-
-
 import { useState } from "react";
-import "../Styles/ProductForm.css";
+import "./Styles/ProductForm.css";
 
 const API = "http://localhost:5002/api/products";
 
