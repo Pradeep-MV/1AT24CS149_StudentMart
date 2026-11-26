@@ -13,6 +13,8 @@ app.use(express.json());
 const authRoutes = require("./Router/authRouter");
 const productRoutes = require("./Router/Productroutes");
 const cartRoutes = require("./Router/CartRouter");
+const userRoutes = require("./Router/userRouter");
+const orderRoutes = require("./Router/OrderRouter");
 
 // Home API
 app.get("/", (req, res) => {
@@ -24,6 +26,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
 
 // MongoDB connection
 mongoose

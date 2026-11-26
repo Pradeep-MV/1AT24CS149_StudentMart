@@ -3,9 +3,17 @@
 .products-page {
     min-height: 100vh;
     padding: 35px 5%;
-    background: #f4f7fb;
+    background-color: #f4f7fb;
+    background-image:
+        radial-gradient(rgba(148, 163, 184, 0.35) 1px, transparent 1px),
+        radial-gradient(circle at 15% 10%, rgba(37, 99, 235, 0.09), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08), transparent 45%),
+        linear-gradient(135deg, #eef4ff 0%, #f8fafc 55%, #e8f0fe 100%);
+    background-size: 22px 22px, 100% 100%, 100% 100%, 100% 100%;
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
+    text-align: left;
 }
 
 /* Page Heading */

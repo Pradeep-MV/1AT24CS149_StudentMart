@@ -4,7 +4,9 @@ import ProductGrid from "./Productgrid";
 import ProductDetails from "./Productdetails";
 import ProductForm from "./Productform";
 import Cart from "./Cart";
+import Orders from "./Orders";
 import UserManagement from "./UserManagement";
+import "./Styles/Dashboard3d.css";;
 
 function Dashboard({ onLogout }) {
     const [page, setPage] = useState("dashboard");
@@ -78,6 +80,13 @@ function Dashboard({ onLogout }) {
             case "users":
                 return <UserManagement />;
 
+            case "orders":
+                return (
+                    <Orders
+                        onBrowseProducts={goToProducts}
+                    />
+                );
+
             case "productDetails":
                 return (
                     <ProductDetails
@@ -92,142 +101,250 @@ function Dashboard({ onLogout }) {
                 return (
                     <Cart
                         onBrowseProducts={goToProducts}
+                        onGoToOrders={() => setPage("orders")}
                     />
                 );
 
             default:
                 return (
                     <main className="sm-dashboard-content">
-                        <section className="sm-welcome-section">
-                            <h1>
-                                {isAdmin ? "🛡️ Admin Control Center" : "Welcome to StudentMart"}
-                            </h1>
-                            <p>
-                                Welcome back, <strong>{user?.name || (isAdmin ? "Administrator" : "Student")}</strong>!
-                                {isAdmin && (
-                                    <span style={{
-                                        marginLeft: "10px",
-                                        background: "#fef3c7",
-                                        color: "#92400e",
-                                        padding: "3px 10px",
-                                        borderRadius: "12px",
-                                        fontSize: "12px",
-                                        fontWeight: "700"
-                                    }}>
-                                        ADMINISTRATOR
-                                    </span>
-                                )}
-                            </p>
-                            <p className="sm-welcome-subtitle">
-                                {isAdmin
-                                    ? "Full administrative control: manage catalog, add/modify products, and administer student accounts."
-                                    : "Explore textbooks, campus supplies, and student items at budget-friendly prices."}
-                            </p>
+                        {/* 3D Elevated Centered Hero Banner */}
+                        <section className="dash3d-hero">
+                            <div className="dash3d-hero-content">
+                                <div className={`dash3d-pill-badge ${isAdmin ? "admin" : "student"}`}>
+                                    <span>{isAdmin ? "🛡️" : "🎓"}</span>
+                                    <span>{isAdmin ? "ADMINISTRATOR ACCESS" : "STUDENT ACCOUNT"}</span>
+                                </div>
+
+                                <h1>
+                                    Welcome back,{" "}
+                                    <span className="dash3d-hero-name">
+                                        {user?.name || (isAdmin ? "Administrator" : "Student")}
+                                    </span>!
+                                </h1>
+
+                                <p>
+                                    {isAdmin
+                                        ? "Full store control enabled. You can add, edit, or delete items from the store catalog, track all student orders, and administer student accounts."
+                                        : "Find textbooks, campus stationery, and student essentials, manage your personal shopping cart, and track your active campus orders."}
+                                </p>
+
+                                {/* Mini 3D Stat Badges */}
+                                <div className="dash3d-stats-row">
+                                    {isAdmin ? (
+                                        <>
+                                            <span className="dash3d-stat-pill">🏷️ Catalog Control Active</span>
+                                            <span className="dash3d-stat-pill">📦 Order Management Ready</span>
+                                            <span className="dash3d-stat-pill">👥 User Admin Enabled</span>
+                                            <span className="dash3d-stat-pill">🔒 Role: Admin</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="dash3d-stat-pill">🚚 Campus Delivery: Free</span>
+                                            <span className="dash3d-stat-pill">📦 Order Tracking Enabled</span>
+                                            <span className="dash3d-stat-pill">⚡ Verified Student Store</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                         </section>
 
-                        {/* Admin Action Cards */}
+                        {/* 3D Floating Action Cards Grid */}
                         {isAdmin ? (
-                            <section className="sm-dashboard-cards">
-                                <article className="sm-dashboard-card">
-                                    <h3>Manage Products</h3>
-                                    <p>View, edit, or remove items from the store catalog.</p>
+                            <section className="dash3d-grid">
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-blue">
+                                            📦
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Manage Products</h3>
+                                            <p>View, modify pricing, edit stock inventory, or delete products.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-blue"
                                         onClick={goToProducts}
                                     >
-                                        Manage Catalog
+                                        Manage Catalog →
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>Add New Product</h3>
-                                    <p>Upload a new product with stock and pricing to the store.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-emerald">
+                                            ✨
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Add New Product</h3>
+                                            <p>Upload a new product with stock, category, price, and images.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-emerald"
                                         onClick={() => setPage("addProduct")}
                                     >
                                         + Add Product
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>Manage Users</h3>
-                                    <p>View student accounts, promote administrators, and manage users.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-indigo">
+                                            📋
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Manage Orders</h3>
+                                            <p>Track all customer orders, update delivery status, and view details.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
-                                        onClick={() => setPage("users")}
+                                        className="dash3d-btn dash3d-btn-blue"
+                                        onClick={() => setPage("orders")}
                                     >
-                                        View Accounts
+                                        View All Orders →
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>Admin Profile</h3>
-                                    <p>Review and edit administrator profile information.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-purple">
+                                            👥
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Manage Users</h3>
+                                            <p>View registered accounts, change roles, and manage permissions.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-purple"
+                                        onClick={() => setPage("users")}
+                                    >
+                                        View Accounts →
+                                    </button>
+                                </article>
+
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-amber">
+                                            👤
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Admin Profile</h3>
+                                            <p>Review administrator credentials and personal account details.</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="dash3d-btn dash3d-btn-amber"
                                         onClick={() => setPage("profile")}
                                     >
-                                        View Profile
+                                        My Profile →
                                     </button>
                                 </article>
                             </section>
                         ) : (
-                            /* Student Action Cards */
-                            <section className="sm-dashboard-cards">
-                                <article className="sm-dashboard-card">
-                                    <h3>Explore Store</h3>
-                                    <p>Discover campus essentials and textbooks at student prices.</p>
+                            <section className="dash3d-grid">
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-blue">
+                                            🛍️
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Explore Store</h3>
+                                            <p>Discover textbooks, stationery, and gadgets at budget student prices.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-blue"
                                         onClick={goToProducts}
                                     >
-                                        Browse Products
+                                        Browse Catalog →
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>My Cart</h3>
-                                    <p>Review items in your shopping cart and place orders.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-emerald">
+                                            🛒
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>My Cart</h3>
+                                            <p>Review items in your cart, change quantities, and checkout.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-emerald"
                                         onClick={() => setPage("cart")}
                                     >
-                                        Open Cart
+                                        Open Cart →
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>My Profile</h3>
-                                    <p>View your USN, personal information and settings.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-indigo">
+                                            📦
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>My Orders</h3>
+                                            <p>Track your active orders, delivery updates, and purchase history.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-blue"
+                                        onClick={() => setPage("orders")}
+                                    >
+                                        Track Orders →
+                                    </button>
+                                </article>
+
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-purple">
+                                            🎓
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>My Profile</h3>
+                                            <p>View your registered USN, student email, and academic details.</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="dash3d-btn dash3d-btn-purple"
                                         onClick={() => setPage("profile")}
                                     >
-                                        View Profile
+                                        View Profile →
                                     </button>
                                 </article>
 
-                                <article className="sm-dashboard-card">
-                                    <h3>Edit Profile</h3>
-                                    <p>Update your contact number, college, and semester details.</p>
+                                <article className="dash3d-card">
+                                    <div className="dash3d-card-top">
+                                        <div className="dash3d-icon-block dash3d-icon-amber">
+                                            ✏️
+                                        </div>
+                                        <div className="dash3d-card-text">
+                                            <h3>Edit Profile</h3>
+                                            <p>Update your phone number, college campus, and current semester.</p>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
+                                        className="dash3d-btn dash3d-btn-amber"
                                         onClick={() => setPage("edit")}
                                     >
-                                        Edit Profile
+                                        Update Details →
                                     </button>
                                 </article>
                             </section>
                         )}
-
-                        <section className="sm-dashboard-products">
-                            <ProductGrid
-                                onViewDetails={openProductDetails}
-                                onAddNewProduct={() => setPage("addProduct")}
-                                onEditProduct={handleStartEdit}
-                            />
-                        </section>
                     </main>
                 );
         }
@@ -280,6 +397,14 @@ function Dashboard({ onLogout }) {
 
                             <button
                                 type="button"
+                                className={page === "orders" ? "sm-nav-item active" : "sm-nav-item"}
+                                onClick={() => setPage("orders")}
+                            >
+                                <span>📦</span> All Orders
+                            </button>
+
+                            <button
+                                type="button"
                                 className={page === "users" ? "sm-nav-item active" : "sm-nav-item"}
                                 onClick={() => setPage("users")}
                             >
@@ -290,13 +415,23 @@ function Dashboard({ onLogout }) {
 
                     {/* Student Only Navigation */}
                     {!isAdmin && (
-                        <button
-                            type="button"
-                            className={page === "cart" ? "sm-nav-item active" : "sm-nav-item"}
-                            onClick={() => setPage("cart")}
-                        >
-                            <span>🛒</span> My Cart
-                        </button>
+                        <>
+                            <button
+                                type="button"
+                                className={page === "cart" ? "sm-nav-item active" : "sm-nav-item"}
+                                onClick={() => setPage("cart")}
+                            >
+                                <span>🛒</span> My Cart
+                            </button>
+
+                            <button
+                                type="button"
+                                className={page === "orders" ? "sm-nav-item active" : "sm-nav-item"}
+                                onClick={() => setPage("orders")}
+                            >
+                                <span>📦</span> My Orders
+                            </button>
+                        </>
                     )}
 
                     <button

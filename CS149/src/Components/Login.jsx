@@ -117,7 +117,7 @@ function Login({ onLogin, onRegisterClick }) {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder={loginRole === "admin" ? "admin@studentmart.com" : "Enter your email"}
+                        placeholder={loginRole === "admin" ? "Enter admin email" : "Enter your email"}
                         required
                     />
                 </div>
@@ -132,14 +132,6 @@ function Login({ onLogin, onRegisterClick }) {
                         required
                     />
                 </div>
-
-                {loginRole === "admin" && (
-                    <div style={{ background: "#f8fafc", padding: "10px 12px", borderRadius: "6px", border: "1px solid #e2e8f0", fontSize: "12px", color: "#64748b", marginBottom: "15px" }}>
-                        💡 <strong>Default Admin Credentials:</strong><br />
-                        Email: <code>admin@studentmart.com</code><br />
-                        Password: <code>admin123</code>
-                    </div>
-                )}
 
                 {message && (
                     <p className="error-message" style={{ color: "#ef4444", fontSize: "14px", marginBottom: "15px" }}>

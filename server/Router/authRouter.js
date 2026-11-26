@@ -10,13 +10,24 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
     try {
-        const { name, usn, email, password } = req.body;
+        const { name, usn, email, password, role, adminCode } = req.body;
 
         // Check required fields
         if (!name || !usn || !email || !password) {
             return res.status(400).json({
                 message: "Name, USN, email and password are required"
             });
+        }
+
+        // Validate role & admin code if admin registration requested
+        let assignedRole = "student";
+        if (role === "admin") {
+            if (adminCode !== "ADMIN123") {
+                return res.status(403).json({
+                    message: "Invalid Admin Security Code. Use ADMIN123 to register as admin."
+                });
+            }
+            assignedRole = "admin";
         }
 
         // Normalize input
@@ -26,14 +37,13 @@ router.post("/register", async (req, res) => {
 
         // Validate email
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
         if (!emailPattern.test(normalizedEmail)) {
             return res.status(400).json({
                 message: "Please enter a valid email"
             });
         }
 
-        // Validate password
+        // Check password length
         if (password.length < 6) {
             return res.status(400).json({
                 message: "Password must be at least 6 characters"
@@ -41,11 +51,11 @@ router.post("/register", async (req, res) => {
         }
 
         // Check existing email
-        const existingUser = await User.findOne({
+        const existingEmail = await User.findOne({
             email: normalizedEmail
         });
 
-        if (existingUser) {
+        if (existingEmail) {
             return res.status(409).json({
                 message: "Email already registered"
             });
@@ -58,7 +68,7 @@ router.post("/register", async (req, res) => {
 
         if (existingUSN) {
             return res.status(409).json({
-                message: "USN already registered"
+                message: "This USN is already registered"
             });
         }
 
@@ -70,7 +80,8 @@ router.post("/register", async (req, res) => {
             name: normalizedName,
             usn: normalizedUSN,
             email: normalizedEmail,
-            password: hashedPassword
+            password: hashedPassword,
+            role: assignedRole
         });
 
         return res.status(201).json({
@@ -80,6 +91,7 @@ router.post("/register", async (req, res) => {
                 name: newUser.name,
                 usn: newUser.usn,
                 email: newUser.email,
+                role: newUser.role,
                 phone: newUser.phone,
                 college: newUser.college,
                 course: newUser.course,
@@ -126,7 +138,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, requiredRole } = req.body;
 
         // Check required fields
         if (!email || !password) {
@@ -161,6 +173,13 @@ router.post("/login", async (req, res) => {
             });
         }
 
+        // If trying to access via Admin login portal, check role
+        if (requiredRole === "admin" && user.role !== "admin") {
+            return res.status(403).json({
+                message: "Access Denied: This account does not have Admin privileges."
+            });
+        }
+
         // Successful login
         return res.status(200).json({
             message: "Login successful",
@@ -169,6 +188,7 @@ router.post("/login", async (req, res) => {
                 name: user.name,
                 usn: user.usn,
                 email: user.email,
+                role: user.role || "student",
                 phone: user.phone,
                 college: user.college,
                 course: user.course,
